@@ -1,0 +1,19 @@
+{
+  "name": "sumoguri",
+  "version": "0.0.1",
+  "description": "The CLI command for crawl static website and take screenshots",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Leko/sumoguri.git"
+  },
+  "author": "Leko <leko.noor@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Leko/sumoguri/issues"
+  },
+  "homepage": "https://github.com/Leko/sumoguri#readme"
+}
