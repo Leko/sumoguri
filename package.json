@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Leko/sumoguri/issues"
   },
-  "homepage": "https://github.com/Leko/sumoguri#readme"
+  "homepage": "https://github.com/Leko/sumoguri#readme",
+  "devDependencies": {
+    "puppeteer": "^1.19.0"
+  }
 }
