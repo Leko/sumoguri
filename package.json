@@ -11,6 +11,9 @@
     "cli.js",
     "dist"
   ],
+  "engines": {
+    "node": "10"
+  },
   "repository": "Leko/sumoguri",
   "author": "Leko <leko.noor@gmail.com>",
   "license": "MIT",
