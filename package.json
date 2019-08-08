@@ -1,6 +1,6 @@
 {
   "name": "sumoguri",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The CLI command for crawl static website and take screenshots",
   "bin": "cli.js",
   "scripts": {
