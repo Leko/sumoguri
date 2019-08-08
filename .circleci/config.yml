@@ -2,15 +2,31 @@ workflows:
   version: 2
   node-multi-build:
     jobs:
+      - node-lts
       - node-v10
-      - node-latest
+      - node-v12
 
 version: 2
 jobs:
   base: &base
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:lts-stretch-browsers
     working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
+            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
+      - run: npm test
+      - run: npm run prepare && node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
+  node-lts:
+    <<: *base
     steps:
       - checkout
       - restore_cache:
@@ -28,8 +44,8 @@ jobs:
   node-v10:
     <<: *base
     docker:
-      - image: node:10
-  node-latest:
+      - image: circleci/node:10-stretch-browsers
+  node-v12:
     <<: *base
     docker:
-      - image: node:latest
+      - image: circleci/node:12-stretch-browsers
