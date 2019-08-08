@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { CLIOptions } from "./options";
 import { prettify } from "../lib/prettify";
-import { escape } from "../lib/escape";
+import { filenamify } from "../lib/filename";
 import { init } from "../logger";
 import { Matrix } from "../Matrix";
 import { QueueItem } from "../QueueItem";
@@ -42,37 +42,20 @@ export async function main(options: CLIOptions) {
       }
       log(`visit [${item.locale}][${viewport}] ${item.url.href}`);
       localVisited[pathname] = true;
-      return pool
-        .run({
-          locale: item.locale,
-          viewport: item.viewport,
-          url: item.url
-        })
-        .then(({ binary, hrefs }) => {
-          artifacts.push({ item, binary });
-          const nextUrls: URL[] = hrefs
-            .filter(Boolean)
-            .map(url => new URL(url));
+      return pool.run(item).then(({ binary, hrefs }) => {
+        artifacts.push({ item, binary });
+        const nextUrls: URL[] = hrefs.filter(Boolean).map(url => new URL(url));
 
-          return nextUrls
-            .filter(url => url.host === host)
-            .map(url => new QueueItem({ ...item, url }));
-        });
+        return nextUrls
+          .filter(url => url.host === host)
+          .map(url => new QueueItem({ ...item, url }));
+      });
     });
     open = (await Promise.all(promises)).flat().filter(Boolean);
   }
   for (let artifact of artifacts) {
-    const {
-      item: { locale, viewport, url },
-      binary
-    } = artifact;
-    const filePath = options.flat
-      ? path.join(
-          outDir,
-          `${locale}-${viewport.join("x")}-${escape(url).replace(/\//g, "-") +
-            ".png"}`
-        )
-      : path.join(outDir, locale, viewport.join("x"), escape(url) + ".png");
+    const { item, binary } = artifact;
+    const filePath = path.join(outDir, filenamify(item, options.flat));
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
