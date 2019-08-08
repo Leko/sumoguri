@@ -9,7 +9,7 @@ version: 2
 jobs:
   base: &base
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:latest-stretch-browsers
     working_directory: ~/repo
     steps:
       - checkout
@@ -28,8 +28,8 @@ jobs:
   node-v10:
     <<: *base
     docker:
-      - image: node:10
+      - image: node:10-stretch-browsers
   node-latest:
     <<: *base
     docker:
-      - image: node:latest
+      - image: node:latest-stretch-browsers
