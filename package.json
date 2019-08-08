@@ -19,6 +19,7 @@
     "chalk": "^2.4.2",
     "core-js": "^3.1.4",
     "debug": "^4.1.1",
+    "puppeteer": "^1.19.0",
     "yargs": "^13.3.0"
   },
   "devDependencies": {
@@ -26,7 +27,6 @@
     "@types/node": "^12.6.9",
     "@types/puppeteer": "^1.19.0",
     "@types/yargs": "^13.0.2",
-    "puppeteer": "^1.19.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   }
