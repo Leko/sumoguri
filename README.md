@@ -1,6 +1,7 @@
 # sumoguri(素潜り)
 
 [![CircleCI](https://circleci.com/gh/Leko/sumoguri.svg?style=svg)](https://circleci.com/gh/Leko/sumoguri)
+[![codecov](https://codecov.io/gh/Leko/sumoguri/branch/master/graph/badge.svg)](https://codecov.io/gh/Leko/sumoguri)
 ![](https://img.shields.io/npm/v/sumoguri.svg)
 ![](https://img.shields.io/npm/dm/sumoguri.svg)
 ![](https://img.shields.io/npm/l/sumoguri.svg)
