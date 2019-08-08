@@ -4,7 +4,7 @@
   "description": "The CLI command for crawl static website and take screenshots",
   "bin": "cli.js",
   "scripts": {
-    "test": "exit 0 # TODO: jest",
+    "test": "jest",
     "prepare": "tsc"
   },
   "files": [
@@ -27,9 +27,12 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.4",
+    "@types/jest": "^24.0.17",
     "@types/node": "^12.6.9",
     "@types/puppeteer": "^1.19.0",
     "@types/yargs": "^13.0.2",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   }
