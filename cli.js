@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 require("core-js/features/array/flat");
 require("core-js/features/array/flat-map");
 const chalk = require("chalk");
