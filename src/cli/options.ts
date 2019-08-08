@@ -1,4 +1,3 @@
-import { cpus } from "os";
 import Yargs from "yargs";
 import { Viewport } from "../Viewport";
 
@@ -21,11 +20,6 @@ const cmd = Yargs.options({
     alias: "o",
     description: "Output directory.",
     default: "__screenshots__"
-  },
-  parallel: {
-    alias: "p",
-    description: "Number of browsers to screenshot.",
-    default: cpus().length
   },
   flat: {
     alias: "f",
