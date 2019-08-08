@@ -66,12 +66,13 @@ export async function main(options: CLIOptions) {
       item: { locale, viewport, url },
       binary
     } = artifact;
-    const filePath = path.join(
-      outDir,
-      locale,
-      viewport.join("x"),
-      escape(url) + ".png"
-    );
+    const filePath = options.flat
+      ? path.join(
+          outDir,
+          `${locale}-${viewport.join("x")}-${escape(url).replace(/\//g, "-") +
+            ".png"}`
+        )
+      : path.join(outDir, locale, viewport.join("x"), escape(url) + ".png");
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });

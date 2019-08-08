@@ -27,7 +27,12 @@ const cmd = Yargs.options({
     description: "Number of browsers to screenshot.",
     default: cpus().length
   },
-  flat: { alias: "f", description: "Flatten output filename.", default: false },
+  flat: {
+    alias: "f",
+    type: "boolean",
+    description: "Flatten output filename.",
+    default: false
+  },
   include: {
     alias: "i",
     description: "Including paths.",
