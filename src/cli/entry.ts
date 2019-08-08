@@ -22,7 +22,7 @@ export async function main(options: CLIOptions) {
 
   const url = new URL(entrypoint);
   const host = url.host;
-  const pool = new TaggedWorkerPool(options);
+  const pool = new TaggedWorkerPool();
   let open: QueueItem[] = Matrix.build(url, options);
   const visited: {
     [locale: string]: { [viewport: string]: { [pathname: string]: true } };
