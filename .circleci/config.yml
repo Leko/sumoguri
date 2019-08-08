@@ -24,7 +24,7 @@ jobs:
             - node_modules
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
       - run: npm test
-      - run: npm run prepare && node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
+      - run: node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
   node-lts:
     <<: *base
     steps:
