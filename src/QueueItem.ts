@@ -1,21 +1,40 @@
-import { Viewport } from "./Viewport";
+import { DeviceDescriptor, Browsers } from "./types";
 
 export class QueueItem {
   public readonly url: URL;
   public readonly locale: string;
-  public readonly viewport: Viewport;
+  public readonly browserName: Browsers;
+  public readonly deviceDescriptor: DeviceDescriptor;
 
   constructor({
     url,
     locale,
-    viewport
+    browserName,
+    deviceDescriptor
   }: {
     url: URL;
     locale: string;
-    viewport: Viewport;
+    browserName: Browsers;
+    deviceDescriptor: DeviceDescriptor;
   }) {
     this.url = url;
     this.locale = locale;
-    this.viewport = viewport;
+    this.browserName = browserName;
+    this.deviceDescriptor = deviceDescriptor;
+    if (!deviceDescriptor) {
+      console.error(new Error().stack);
+    }
+  }
+
+  getDimention() {
+    try {
+      const {
+        viewport: { width, height }
+      } = this.deviceDescriptor;
+      return [width, height].join("x");
+    } catch (e) {
+      console.error(this);
+      throw e;
+    }
   }
 }

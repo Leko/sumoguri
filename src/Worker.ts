@@ -1,5 +1,6 @@
 import puppeteer, { Page, Browser } from "puppeteer";
 import { Viewport } from "./Viewport";
+import { QueueItem } from "./QueueItem";
 
 export type Result = {
   binary: Buffer;
@@ -12,9 +13,12 @@ export class Worker {
   private locale: string;
   private viewport: Viewport;
 
-  constructor({ locale, viewport }: { locale: string; viewport: Viewport }) {
-    this.locale = locale;
-    this.viewport = viewport;
+  constructor(item: QueueItem) {
+    this.locale = item.locale;
+    this.viewport = [
+      item.deviceDescriptor.viewport.width,
+      item.deviceDescriptor.viewport.height
+    ];
   }
 
   async run({ href }: URL): Promise<Result> {

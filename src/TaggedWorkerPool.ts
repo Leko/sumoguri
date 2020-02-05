@@ -1,19 +1,13 @@
 import Bottleneck from "bottleneck";
-import { Viewport } from "./Viewport";
 import { Worker, Result } from "./Worker";
+import { QueueItem } from "./QueueItem";
 
 export class TaggedWorkerPool {
   private readonly limiter: Bottleneck.Group;
   private readonly states = new Map<string, Worker>();
 
-  static getTag({
-    locale,
-    viewport
-  }: {
-    locale: string;
-    viewport: Viewport;
-  }): string {
-    return [locale, viewport.join("x")].join("_");
+  static getTag(item: QueueItem): string {
+    return [item.locale, item.getDimention()].join("_");
   }
 
   constructor() {
@@ -22,19 +16,12 @@ export class TaggedWorkerPool {
     });
   }
 
-  async run({
-    locale,
-    viewport,
-    url
-  }: {
-    locale: string;
-    viewport: Viewport;
-    url: URL;
-  }): Promise<Result> {
-    const tag = TaggedWorkerPool.getTag({ locale, viewport });
+  async run(item: QueueItem): Promise<Result> {
+    const { url } = item;
+    const tag = TaggedWorkerPool.getTag(item);
     return this.limiter.key(tag).schedule(
       async (): Promise<Result> => {
-        const worker = await this.getOrInit({ locale, viewport });
+        const worker = await this.getOrInit(item);
         return await worker.run(url);
       }
     );
@@ -46,17 +33,11 @@ export class TaggedWorkerPool {
     }
   }
 
-  private async getOrInit({
-    locale,
-    viewport
-  }: {
-    locale: string;
-    viewport: Viewport;
-  }): Promise<Worker> {
-    const tag = TaggedWorkerPool.getTag({ locale, viewport });
+  private async getOrInit(item: QueueItem): Promise<Worker> {
+    const tag = TaggedWorkerPool.getTag(item);
     const worker = this.states.get(tag);
     if (!worker) {
-      this.states.set(tag, new Worker({ locale, viewport }));
+      this.states.set(tag, new Worker(item));
     }
     return this.states.get(tag)!;
   }

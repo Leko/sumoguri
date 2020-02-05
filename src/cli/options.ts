@@ -1,5 +1,6 @@
 import Yargs from "yargs";
-import { Viewport } from "../Viewport";
+import { devices } from "playwright";
+import { DeviceDescriptor, Browsers } from "../types";
 
 export type CLIOptions = {
   _: string[];
@@ -8,11 +9,13 @@ export type CLIOptions = {
   flat: boolean;
   include: string[];
   exclude: string[];
-  viewports: Viewport[];
+  browsers: Browsers[];
+  devices: DeviceDescriptor[];
   locales: string[];
   disableCssAnimation: boolean;
   silent: boolean;
   verbose: boolean;
+  "list-devices": boolean;
 };
 
 const cmd = Yargs.options({
@@ -39,15 +42,30 @@ const cmd = Yargs.options({
     type: "array",
     default: []
   },
-  viewports: {
-    alias: "V",
-    description: "Viewports.",
-    default: "800x600",
-    coerce: (args: string) => {
-      return args
-        .split(",")
-        .map(arg => arg.split("x").map(n => parseInt(n, 10)));
+  browsers: {
+    alias: "b",
+    description: "Target browsers (comma separated).",
+    type: "string",
+    default: "chromium",
+    coerce: opts => {
+      return opts.split(",");
     }
+  },
+  devices: {
+    alias: "d",
+    description:
+      "Target devices (comma separated). Available values are listed in --list-devices",
+    type: "string",
+    default: "iPhone XR",
+    coerce: opts => {
+      return opts
+        .split(",")
+        .map((deviceName: string) => devices.find(d => d.name === deviceName));
+    }
+  },
+  "list-devices": {
+    description: "List all devices.",
+    type: "boolean"
   },
   locales: {
     alias: "l",
@@ -62,8 +80,8 @@ const cmd = Yargs.options({
     type: "boolean",
     default: true
   },
-  silent: { default: false },
-  verbose: { default: false }
+  silent: { type: "boolean", default: false },
+  verbose: { type: "boolean", default: false }
 });
 
 export const parse = cmd.parse.bind(cmd);
