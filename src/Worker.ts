@@ -24,12 +24,7 @@ export class Worker {
 
   async run({ href }: URL): Promise<Result> {
     const page = await this.getPage();
-    try {
-      await page.goto(href, { waitUntil: "load" });
-    } catch (e) {
-      console.log({ href });
-      throw e;
-    }
+    await page.goto(href, { waitUntil: "networkidle0" });
 
     const binary = await page.screenshot({
       type: "png",
