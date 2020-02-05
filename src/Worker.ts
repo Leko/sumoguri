@@ -62,13 +62,27 @@ export class Worker {
         throw new Error(`Unknown browser name ${this.browserName}`);
       }
       this.browser = await browsers[this.browserName].launch({
-        // For chromium
-        args: [`--lang=${this.locale}`]
-        // args: [`-UILocale=${this.locale}`]
+        env: {
+          LANGUAGE: this.locale
+        }
       });
       const ctx = await this.browser.newContext(this.deviceDescriptor);
       const page = await ctx.newPage();
-      // await page.setViewport({ width, height });
+      await page.setExtraHTTPHeaders({
+        "Accept-Language": this.locale
+      });
+      await page.evaluateOnNewDocument((locale: string) => {
+        Object.defineProperty(navigator, "language", {
+          get: function() {
+            return [locale];
+          }
+        });
+        Object.defineProperty(navigator, "languages", {
+          get: function() {
+            return [locale];
+          }
+        });
+      }, this.locale);
       await page.addStyleTag({
         content: `
           *, *::before, *::after {
