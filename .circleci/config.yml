@@ -40,6 +40,18 @@ jobs:
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
       - run: npm test
       - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Install NotoSansCJK JP
+          command: |
+            mkdir /tmp/fonts
+            cd /tmp/fonts
+            wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJKjp-hinted.zip
+            unzip NotoSansCJKjp-hinted.zip
+            mkdir -p ~/.fonts
+            cp *otf ~/.fonts
+            fc-cache -f -v
+            fc-match --all
+            rm -rf /tmp/fonts
       - run: npm run prepare && node cli.js https://jsconf.jp/2019 --browsers chromium,firefox,webkit --locales en-US,ja-JP
       - store_artifacts:
           path: __screenshots__
