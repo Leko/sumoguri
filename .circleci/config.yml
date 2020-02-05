@@ -39,8 +39,10 @@ jobs:
             - node_modules
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
       - run: npm test
-      - run: npm run prepare && node cli.js https://jsconf.jp/2019 --browsers chromium,firefox,webkit --locales en-US,ja-JP
       - run: bash <(curl -s https://codecov.io/bash)
+      - run: npm run prepare && node cli.js https://jsconf.jp/2019 --browsers chromium,firefox,webkit --locales en-US,ja-JP
+      - store_artifacts:
+          path: __screenshots__
   node-v10:
     <<: *base
     docker:
