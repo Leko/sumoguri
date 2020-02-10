@@ -31,7 +31,7 @@ const cmd = Yargs.scriptName("sumoguri")
   )
   .example("$0 --list-devices", "List all available devices and exit")
   .options({
-    outDir: {
+    "out-dir": {
       alias: "o",
       description: "Output directory.",
       default: "__screenshots__"
@@ -89,7 +89,7 @@ const cmd = Yargs.scriptName("sumoguri")
         return args.split(",").map(arg => arg.trim());
       }
     },
-    disableCssAnimation: {
+    "disable-css-animation": {
       description: "Disable CSS animation and transition.",
       type: "boolean",
       default: true
