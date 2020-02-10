@@ -1,5 +1,8 @@
-import puppeteer, { Page, Browser } from "puppeteer";
-import { Viewport } from "./Viewport";
+import { Browser, Page, chromium, webkit, firefox } from "playwright";
+import { QueueItem } from "./QueueItem";
+import { Browsers, DeviceDescriptor } from "./types";
+
+const browsers = { chromium, webkit, firefox };
 
 export type Result = {
   binary: Buffer;
@@ -10,11 +13,13 @@ export class Worker {
   private browser: Browser | null = null;
   private page: Page | null = null;
   private locale: string;
-  private viewport: Viewport;
+  private browserName: Browsers;
+  private deviceDescriptor: DeviceDescriptor;
 
-  constructor({ locale, viewport }: { locale: string; viewport: Viewport }) {
-    this.locale = locale;
-    this.viewport = viewport;
+  constructor(item: QueueItem) {
+    this.locale = item.locale;
+    this.browserName = item.browserName;
+    this.deviceDescriptor = item.deviceDescriptor;
   }
 
   async run({ href }: URL): Promise<Result> {
@@ -39,7 +44,7 @@ export class Worker {
       handles.map(handle => handle.getProperty("href"))
     );
     const hrefs: string[] = await Promise.all(
-      props.map(href => href.jsonValue())
+      props.filter(Boolean).map(href => href!.jsonValue())
     );
 
     return hrefs;
@@ -53,12 +58,31 @@ export class Worker {
 
   async getPage(): Promise<Page> {
     if (!this.page) {
-      const [width, height] = this.viewport;
-      this.browser = await puppeteer.launch({
-        args: [`--lang=${this.locale}`]
+      if (!browsers[this.browserName]) {
+        throw new Error(`Unknown browser name ${this.browserName}`);
+      }
+      this.browser = await browsers[this.browserName].launch({
+        env: {
+          LANGUAGE: this.locale
+        }
       });
-      const page = await this.browser.newPage();
-      await page.setViewport({ width, height });
+      const ctx = await this.browser.newContext(this.deviceDescriptor);
+      const page = await ctx.newPage();
+      await page.setExtraHTTPHeaders({
+        "Accept-Language": this.locale
+      });
+      await page.evaluateOnNewDocument((locale: string) => {
+        Object.defineProperty(navigator, "language", {
+          get: function() {
+            return locale;
+          }
+        });
+        Object.defineProperty(navigator, "languages", {
+          get: function() {
+            return [locale];
+          }
+        });
+      }, this.locale);
       await page.addStyleTag({
         content: `
           *, *::before, *::after {

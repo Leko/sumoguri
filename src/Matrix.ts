@@ -1,4 +1,5 @@
-import { Viewport } from "./Viewport";
+import { createCombinator } from "deep-combination";
+import { DeviceDescriptor, Browsers } from "./types";
 import { QueueItem } from "./QueueItem";
 
 export class Matrix {
@@ -6,21 +7,28 @@ export class Matrix {
     url: URL,
     {
       locales,
-      viewports
+      devices,
+      browsers
     }: {
       locales: string[];
-      viewports: Viewport[];
+      devices: DeviceDescriptor[];
+      browsers: Browsers[];
     }
   ): QueueItem[] {
-    return locales.flatMap(locale => {
-      return viewports.map(
-        viewport =>
-          new QueueItem({
-            url,
-            locale,
-            viewport
-          })
-      );
-    });
+    const combinator = createCombinator()
+      .addDimention(browsers)
+      .addDimention(devices)
+      .addDimention(locales);
+
+    return Array.from(combinator).map(
+      ([browserName, deviceDescriptor, locale]) => {
+        return new QueueItem({
+          url,
+          browserName,
+          locale,
+          deviceDescriptor
+        });
+      }
+    );
   }
 }

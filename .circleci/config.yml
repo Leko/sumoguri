@@ -24,7 +24,7 @@ jobs:
             - node_modules
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
       - run: npm test
-      - run: node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
+      - run: node cli.js https://jsconf.jp/2019 --browsers chromium,firefox,webkit --locales en-US,ja-JP
   node-lts:
     <<: *base
     steps:
@@ -39,8 +39,22 @@ jobs:
             - node_modules
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
       - run: npm test
-      - run: npm run prepare && node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
       - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Install NotoSansCJK JP
+          command: |
+            mkdir /tmp/fonts
+            cd /tmp/fonts
+            wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJKjp-hinted.zip
+            unzip NotoSansCJKjp-hinted.zip
+            mkdir -p ~/.fonts
+            cp *otf ~/.fonts
+            fc-cache -f -v
+            fc-match --all
+            rm -rf /tmp/fonts
+      - run: npm run prepare && node cli.js https://example.com
+      - store_artifacts:
+          path: __screenshots__
   node-v10:
     <<: *base
     docker:

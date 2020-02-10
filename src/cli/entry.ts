@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { devices } from "playwright";
 import { CLIOptions } from "./options";
 import { prettify } from "../lib/prettify";
 import { filenamify } from "../lib/filename";
@@ -14,8 +15,23 @@ export async function main(options: CLIOptions) {
 
   const {
     _: [entrypoint],
+    "list-devices": listDevicesAndExit,
     outDir
   } = options;
+  if (listDevicesAndExit) {
+    for (let name in devices) {
+      if (/^\d+$/.test(name)) {
+        continue;
+      }
+
+      const {
+        viewport: { width, height, deviceScaleFactor }
+      } = devices[name];
+      console.log(name, `(${width}x${height}@${deviceScaleFactor})`);
+    }
+    process.exit(0);
+  }
+
   if (!entrypoint) {
     throw new Error("The command line argument `entrypoint` must be required");
   }
@@ -25,22 +41,30 @@ export async function main(options: CLIOptions) {
   const pool = new TaggedWorkerPool();
   let open: QueueItem[] = Matrix.build(url, options);
   const visited: {
-    [locale: string]: { [viewport: string]: { [pathname: string]: true } };
+    [browserName: string]: {
+      [locale: string]: { [viewport: string]: { [pathname: string]: true } };
+    };
   } = {};
   const artifacts: { item: QueueItem; binary: Buffer }[] = [];
-
   while (open.length) {
     const promises: Promise<QueueItem[] | null>[] = open.map(item => {
-      const viewport = item.viewport.join("x");
-      visited[item.locale] = visited[item.locale] || {};
-      visited[item.locale][viewport] = visited[item.locale][viewport] || {};
-      const localVisited = visited[item.locale][viewport];
+      const {
+        locale,
+        browserName,
+        url: { href }
+      } = item;
+      const dimention = item.getDimention();
+      visited[browserName] = visited[browserName] || {};
+      visited[browserName][locale] = visited[browserName][locale] || {};
+      visited[browserName][locale][dimention] =
+        visited[browserName][locale][dimention] || {};
+      const localVisited = visited[browserName][locale][dimention];
       const pathname = prettify(item.url);
       if (localVisited[pathname]) {
-        log(`visited [${item.locale}][${viewport}] ${item.url.href}`);
+        log(`visited [${browserName}][${locale}][${dimention}] ${href}`);
         return Promise.resolve(null);
       }
-      log(`visit [${item.locale}][${viewport}] ${item.url.href}`);
+      log(`visit [${browserName}][${locale}][${dimention}] ${href}`);
       localVisited[pathname] = true;
       return pool.run(item).then(({ binary, hrefs }) => {
         artifacts.push({ item, binary });

@@ -10,48 +10,37 @@ The CLI command for crawl static website and take screenshots.
 
 ## Usage
 
+You can check usage with `--help` option.
+
 ```
-sumoguri --help
-```
+$ sumoguri --help
+sumoguri <ENTRY_URL> [options]
 
-### Example: Run with external url
+Options:
+  --help                 Show help                                     [boolean]
+  --version              Show version number                           [boolean]
+  --outDir, -o           Output directory.          [default: "__screenshots__"]
+  --flat, -f             Flatten output filename.     [boolean] [default: false]
+  --include, -i          Including paths.                  [array] [default: []]
+  --exclude, -e          Excluding paths.                  [array] [default: []]
+  --browsers, -b         Target browsers (comma separated).
+                                                  [string] [default: "chromium"]
+  --devices, -d          Target devices (comma separated). Available values are
+                         listed in --list-devices[string] [default: "iPhone XR"]
+  --list-devices         List all devices.                             [boolean]
+  --locales, -l          Locales.                             [default: "en-US"]
+  --disableCssAnimation  Disable CSS animation and transition.
+                                                       [boolean] [default: true]
+  --silent                                            [boolean] [default: false]
+  --verbose                                           [boolean] [default: false]
 
-- URL: `http://example.com/`
-- Viewports: `1680x1050`, `828x1792`
-- Locales: `en-US`, `ja-JP`
-
-`sumoguri http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792`
-
-Then sumoguri will generate these screenshots:
-
-- `__screenshots__/ja-JP/828x1792/index.png`
-- `__screenshots__/en-US/828x1792/index.png`
-- `__screenshots__/en-US/1680x1050/index.png`
-- `__screenshots__/ja-JP/1680x1050/index.png`
-
-### Example: Run with localhost
-
-```sh
-$ ls public
-index.html
-$ npx serve public &
-[1] 50730
-
-npx: installed 78 in 5.382s
-
-   ┌───────────────────────────────────────────────────┐
-   │                                                   │
-   │   Serving!                                        │
-   │                                                   │
-   │   - Local:            http://localhost:5000       │
-   │   - On Your Network:  http://192.168.10.33:5000   │
-   │                                                   │
-   │   Copied local address to clipboard!              │
-   │                                                   │
-   └───────────────────────────────────────────────────┘
-
-$ sumoguri http://localhost:5000
-save __screenshots__/en-US/800x600/index.png
+Examples:
+  sumoguri https://example.com              Take screenshots from example.com
+  sumoguri https://example.com --locale     Take screenshots in specified
+  ja-JP,zh-CN                               locales
+  sumoguri https://example.com --devices    Take screenshots in specified
+  'iPhone XR,iPad Pro 11 landscape'         devices
+  sumoguri --list-devices                   List all available devices and exit
 ```
 
 ## Contribution
