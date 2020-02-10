@@ -52,7 +52,7 @@ jobs:
             fc-cache -f -v
             fc-match --all
             rm -rf /tmp/fonts
-      - run: npm run prepare && node cli.js https://jsconf.jp/2019 --browsers chromium,firefox,webkit --locales en-US,ja-JP
+      - run: npm run prepare && node cli.js https://example.com
       - store_artifacts:
           path: __screenshots__
   node-v10:
