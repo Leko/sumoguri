@@ -48,7 +48,11 @@ export async function main(options: CLIOptions) {
   const artifacts: { item: QueueItem; binary: Buffer }[] = [];
   while (open.length) {
     const promises: Promise<QueueItem[] | null>[] = open.map(item => {
-      const { locale, browserName } = item;
+      const {
+        locale,
+        browserName,
+        url: { href }
+      } = item;
       const dimention = item.getDimention();
       visited[browserName] = visited[browserName] || {};
       visited[browserName][locale] = visited[browserName][locale] || {};
@@ -57,14 +61,10 @@ export async function main(options: CLIOptions) {
       const localVisited = visited[browserName][locale][dimention];
       const pathname = prettify(item.url);
       if (localVisited[pathname]) {
-        log(
-          `visited [${item.browserName}][${item.locale}][${dimention}] ${item.url.href}`
-        );
+        log(`visited [${browserName}][${locale}][${dimention}] ${href}`);
         return Promise.resolve(null);
       }
-      log(
-        `visit [${item.browserName}][${item.locale}][${dimention}] ${item.url.href}`
-      );
+      log(`visit [${browserName}][${locale}][${dimention}] ${href}`);
       localVisited[pathname] = true;
       return pool.run(item).then(({ binary, hrefs }) => {
         artifacts.push({ item, binary });

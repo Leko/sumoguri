@@ -74,7 +74,7 @@ export class Worker {
       await page.evaluateOnNewDocument((locale: string) => {
         Object.defineProperty(navigator, "language", {
           get: function() {
-            return [locale];
+            return locale;
           }
         });
         Object.defineProperty(navigator, "languages", {
