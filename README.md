@@ -19,15 +19,20 @@ sumoguri --help
 - URL: `http://example.com/`
 - Viewports: `1680x1050`, `828x1792`
 - Locales: `en-US`, `ja-JP`
+- prefers-color-scheme: `light`, `dark`
 
-`sumoguri http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792`
+`sumoguri http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792 --prefers-color-schemes=light,dark`
 
 Then sumoguri will generate these screenshots:
 
-- `__screenshots__/ja-JP/828x1792/index.png`
-- `__screenshots__/en-US/828x1792/index.png`
-- `__screenshots__/en-US/1680x1050/index.png`
-- `__screenshots__/ja-JP/1680x1050/index.png`
+- `__screenshots__/ja-JP/828x1792/light/index.png`
+- `__screenshots__/ja-JP/828x1792/dark/index.png`
+- `__screenshots__/en-US/828x1792/light/index.png`
+- `__screenshots__/en-US/828x1792/dark/index.png`
+- `__screenshots__/en-US/1680x1050/light/index.png`
+- `__screenshots__/en-US/1680x1050/dark/index.png`
+- `__screenshots__/ja-JP/1680x1050/light/index.png`
+- `__screenshots__/ja-JP/1680x1050/dark/index.png`
 
 ### Example: Run with localhost
 
@@ -51,7 +56,7 @@ npx: installed 78 in 5.382s
    └───────────────────────────────────────────────────┘
 
 $ sumoguri http://localhost:5000
-save __screenshots__/en-US/800x600/index.png
+save __screenshots__/en-US/800x600/light/index.png
 ```
 
 ## Contribution

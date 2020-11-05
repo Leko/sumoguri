@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI options help snapshots 1`] = `
+"Usage: sumoguri <entry_url> [options]
+
+Options:
+      --help                   Show help                               [boolean]
+      --version                Show version number                     [boolean]
+  -o, --outDir                 Output directory.    [default: \\"__screenshots__\\"]
+  -f, --flat                   Flatten output file structure.
+                                                      [boolean] [default: false]
+  -d, --depth                  Depth of traversing.      [number] [default: 100]
+  -V, --viewports              Viewports.                   [default: \\"800x600\\"]
+  -l, --locales                Locales.                       [default: \\"en-US\\"]
+      --prefers-color-schemes  Specify prefers-color-scheme.  [default: \\"light\\"]
+      --disable-css-animation  Disable CSS animation and transition.
+                                                       [boolean] [default: true]
+
+Examples:
+  sumoguri https://example.com              Run with default settings
+  sumoguri https://example.com --viewports  Test in multiple viewports
+  1680x1050,828x1792
+  sumoguri https://example.com --locales    Test in multiple locales
+  en-US,ja-JP
+  sumoguri https://example.com              Test in multiple color schemes
+  --prefers-color-schemes=light,dark
+  sumoguri https://example.com --depth 0    Do not traverse links
+
+repository: https://github.com/Leko/sumoguri"
+`;
