@@ -1,5 +1,5 @@
-import { Viewport } from "./Viewport";
-import { QueueItem } from "./QueueItem";
+import { Viewport } from './Viewport'
+import { QueueItem } from './QueueItem'
 
 export class Matrix {
   static build(
@@ -7,22 +7,22 @@ export class Matrix {
     {
       locales,
       viewports,
-      prefersColorSchemes
+      prefersColorSchemes,
     }: {
-      locales: string[];
-      viewports: Viewport[];
-      prefersColorSchemes: string[];
+      locales: string[]
+      viewports: Viewport[]
+      prefersColorSchemes: string[]
     }
   ): QueueItem[] {
-    return locales.flatMap(locale => {
-      return viewports.flatMap(viewport => {
+    return locales.flatMap((locale) => {
+      return viewports.flatMap((viewport) => {
         return prefersColorSchemes.map(
-          prefersColorScheme =>
+          (prefersColorScheme) =>
             new QueueItem({
               url,
               locale,
               viewport,
-              prefersColorScheme
+              prefersColorScheme,
             })
         )
       })

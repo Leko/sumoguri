@@ -1,3 +1,3 @@
 export function prettify(url: URL) {
-  return url.pathname.replace(/\/$/, "");
+  return url.pathname.replace(/\/$/, '')
 }

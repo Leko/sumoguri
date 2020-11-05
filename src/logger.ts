@@ -1,19 +1,19 @@
-import debug from "debug";
+import debug from 'debug'
 
 export function init({
   verbose,
-  silent
+  silent,
 }: {
-  verbose: boolean;
-  silent: boolean;
+  verbose: boolean
+  silent: boolean
 }) {
-  const ns = "sumoguri";
-  const logger = debug(ns);
+  const ns = 'sumoguri'
+  const logger = debug(ns)
   if (silent) {
-    debug.disable();
+    debug.disable()
   }
   if (verbose) {
-    debug.enable(ns);
+    debug.enable(ns)
   }
-  return logger;
+  return logger
 }
