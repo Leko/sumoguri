@@ -6,6 +6,7 @@ describe("filenamify", () => {
     const item = new QueueItem({
       locale: "en-US",
       viewport: [100, 100],
+      prefersColorScheme: 'light',
       url: new URL("http://localhost/hoge/foo/bar")
     });
     const filename = filenamify(item, true);
@@ -15,6 +16,7 @@ describe("filenamify", () => {
     const item = new QueueItem({
       locale: "en-US",
       viewport: [100, 100],
+      prefersColorScheme: 'light',
       url: new URL("http://localhost/hoge/foo/bar")
     });
     const filename = filenamify(item, false);

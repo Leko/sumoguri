@@ -11,10 +11,12 @@ export class Worker {
   private page: Page | null = null;
   private locale: string;
   private viewport: Viewport;
+  private prefersColorScheme: string;
 
-  constructor({ locale, viewport }: { locale: string; viewport: Viewport }) {
+  constructor({ locale, viewport, prefersColorScheme }: { locale: string; prefersColorScheme: string; viewport: Viewport }) {
     this.locale = locale;
     this.viewport = viewport;
+    this.prefersColorScheme = prefersColorScheme;
   }
 
   async run({ href }: URL): Promise<Result> {
@@ -39,7 +41,7 @@ export class Worker {
       handles.map(handle => handle.getProperty("href"))
     );
     const hrefs: string[] = await Promise.all(
-      props.map(href => href.jsonValue())
+      props.map(href => href.jsonValue() as Promise<string>)
     );
 
     return hrefs;
@@ -59,6 +61,9 @@ export class Worker {
       });
       const page = await this.browser.newPage();
       await page.setViewport({ width, height });
+      await page.emulateMediaFeatures([
+        { name: 'prefers-color-scheme', value: this.prefersColorScheme }
+      ])
       await page.addStyleTag({
         content: `
           *, *::before, *::after {

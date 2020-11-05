@@ -11,6 +11,7 @@ export type CLIOptions = {
   depth: number;
   viewports: Viewport[];
   locales: string[];
+  prefersColorSchemes: string[];
   disableCssAnimation: boolean;
   silent: boolean;
   verbose: boolean;
@@ -60,6 +61,13 @@ const cmd = Yargs.options({
     alias: "l",
     description: "Locales.",
     default: "en-US",
+    coerce: (args: string) => {
+      return args.split(",").map(arg => arg.trim());
+    }
+  },
+  prefersColorSchemes: {
+    description: "Specify prefers-color-scheme.",
+    default: 'light',
     coerce: (args: string) => {
       return args.split(",").map(arg => arg.trim());
     }

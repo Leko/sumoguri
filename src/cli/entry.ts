@@ -26,7 +26,13 @@ export async function main(options: CLIOptions) {
   let open: QueueItem[] = Matrix.build(url, options);
   let depth = 0
   const visited: {
-    [locale: string]: { [viewport: string]: { [pathname: string]: true } };
+    [locale: string]: {
+      [viewport: string]: {
+        [prefersColorScheme: string]: {
+          [pathname: string]: true
+        }
+      }
+    };
   } = {};
   const artifacts: { item: QueueItem; binary: Buffer }[] = [];
 
@@ -36,13 +42,14 @@ export async function main(options: CLIOptions) {
       const viewport = item.viewport.join("x");
       visited[item.locale] = visited[item.locale] || {};
       visited[item.locale][viewport] = visited[item.locale][viewport] || {};
-      const localVisited = visited[item.locale][viewport];
+      visited[item.locale][viewport][item.prefersColorScheme] = visited[item.locale][viewport][item.prefersColorScheme] || {};
+      const localVisited = visited[item.locale][viewport][item.prefersColorScheme];
       const pathname = prettify(item.url);
       if (localVisited[pathname]) {
-        log(`visited [${item.locale}][${viewport}] ${item.url.href}`);
+        log(`visited [${item.locale}][${viewport}][${item.prefersColorScheme}] ${item.url.href}`);
         return Promise.resolve(null);
       }
-      log(`visit [${item.locale}][${viewport}] ${item.url.href}`);
+      log(`visit [${item.locale}][${viewport}][${item.prefersColorScheme}] ${item.url.href}`);
       localVisited[pathname] = true;
       return pool.run(item).then(({ binary, hrefs }) => {
         artifacts.push({ item, binary });

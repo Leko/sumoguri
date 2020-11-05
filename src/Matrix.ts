@@ -6,21 +6,26 @@ export class Matrix {
     url: URL,
     {
       locales,
-      viewports
+      viewports,
+      prefersColorSchemes
     }: {
       locales: string[];
       viewports: Viewport[];
+      prefersColorSchemes: string[];
     }
   ): QueueItem[] {
     return locales.flatMap(locale => {
-      return viewports.map(
-        viewport =>
-          new QueueItem({
-            url,
-            locale,
-            viewport
-          })
-      );
-    });
+      return viewports.flatMap(viewport => {
+        return prefersColorSchemes.map(
+          prefersColorScheme =>
+            new QueueItem({
+              url,
+              locale,
+              viewport,
+              prefersColorScheme
+            })
+        )
+      })
+    })
   }
 }
