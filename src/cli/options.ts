@@ -8,6 +8,7 @@ export type CLIOptions = {
   flat: boolean;
   include: string[];
   exclude: string[];
+  depth: number;
   viewports: Viewport[];
   locales: string[];
   disableCssAnimation: boolean;
@@ -38,6 +39,12 @@ const cmd = Yargs.options({
     description: "Excluding paths.",
     type: "array",
     default: []
+  },
+  depth: {
+    alias: "d",
+    description: "Depth of traversing.",
+    default: 100,
+    type: "number",
   },
   viewports: {
     alias: "V",

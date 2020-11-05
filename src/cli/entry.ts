@@ -24,12 +24,14 @@ export async function main(options: CLIOptions) {
   const host = url.host;
   const pool = new TaggedWorkerPool();
   let open: QueueItem[] = Matrix.build(url, options);
+  let depth = 0
   const visited: {
     [locale: string]: { [viewport: string]: { [pathname: string]: true } };
   } = {};
   const artifacts: { item: QueueItem; binary: Buffer }[] = [];
 
   while (open.length) {
+    depth++
     const promises: Promise<QueueItem[] | null>[] = open.map(item => {
       const viewport = item.viewport.join("x");
       visited[item.locale] = visited[item.locale] || {};
@@ -44,6 +46,9 @@ export async function main(options: CLIOptions) {
       localVisited[pathname] = true;
       return pool.run(item).then(({ binary, hrefs }) => {
         artifacts.push({ item, binary });
+        if (depth > options.depth) {
+          return []
+        }
         const nextUrls: URL[] = hrefs.filter(Boolean).map(url => new URL(url));
 
         return nextUrls
