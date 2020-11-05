@@ -34,11 +34,15 @@ export class TaggedWorkerPool {
     prefersColorScheme: string;
     viewport: Viewport;
     url: URL;
+  }, {
+    disableCssAnimation,
+  }: {
+    disableCssAnimation: boolean;
   }): Promise<Result> {
     const tag = TaggedWorkerPool.getTag({ locale, viewport, prefersColorScheme });
     return this.limiter.key(tag).schedule(
       async (): Promise<Result> => {
-        const worker = await this.getOrInit({ locale, viewport, prefersColorScheme });
+        const worker = await this.getOrInit({ locale, viewport, prefersColorScheme, disableCssAnimation });
         return await worker.run(url);
       }
     );
@@ -53,16 +57,18 @@ export class TaggedWorkerPool {
   private async getOrInit({
     locale,
     prefersColorScheme,
-    viewport
+    viewport,
+    disableCssAnimation,
   }: {
     locale: string;
     prefersColorScheme: string;
     viewport: Viewport;
+    disableCssAnimation: boolean;
   }): Promise<Worker> {
     const tag = TaggedWorkerPool.getTag({ locale, viewport, prefersColorScheme });
     const worker = this.states.get(tag);
     if (!worker) {
-      this.states.set(tag, new Worker({ locale, viewport, prefersColorScheme }));
+      this.states.set(tag, new Worker({ locale, viewport, prefersColorScheme, disableCssAnimation }));
     }
     return this.states.get(tag)!;
   }

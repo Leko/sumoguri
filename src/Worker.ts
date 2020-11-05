@@ -12,11 +12,13 @@ export class Worker {
   private locale: string;
   private viewport: Viewport;
   private prefersColorScheme: string;
+  private disableCssAnimation: boolean;
 
-  constructor({ locale, viewport, prefersColorScheme }: { locale: string; prefersColorScheme: string; viewport: Viewport }) {
+  constructor({ locale, viewport, prefersColorScheme, disableCssAnimation }: { locale: string; prefersColorScheme: string; viewport: Viewport, disableCssAnimation: boolean }) {
     this.locale = locale;
     this.viewport = viewport;
     this.prefersColorScheme = prefersColorScheme;
+    this.disableCssAnimation = disableCssAnimation;
   }
 
   async run({ href }: URL): Promise<Result> {
@@ -64,14 +66,16 @@ export class Worker {
       await page.emulateMediaFeatures([
         { name: 'prefers-color-scheme', value: this.prefersColorScheme }
       ])
-      await page.addStyleTag({
-        content: `
-          *, *::before, *::after {
-            transition: none !important;
-            animation: none !important;
-          }
-        `
-      });
+      if (this.disableCssAnimation) {
+        await page.addStyleTag({
+          content: `
+            *, *::before, *::after {
+              transition: none !important;
+              animation: none !important;
+            }
+          `
+        });
+      }
 
       this.page = page;
     }

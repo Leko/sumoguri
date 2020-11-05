@@ -51,7 +51,7 @@ export async function main(options: CLIOptions) {
       }
       log(`visit [${item.locale}][${viewport}][${item.prefersColorScheme}] ${item.url.href}`);
       localVisited[pathname] = true;
-      return pool.run(item).then(({ binary, hrefs }) => {
+      return pool.run(item, { disableCssAnimation: options.disableCssAnimation }).then(({ binary, hrefs }) => {
         artifacts.push({ item, binary });
         if (depth > options.depth) {
           return []
