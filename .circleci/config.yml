@@ -5,6 +5,7 @@ workflows:
       - node-lts
       - node-v10
       - node-v12
+      - node-v14
 
 version: 2
 jobs:
@@ -26,6 +27,7 @@ jobs:
       - run: npm test
       - run: node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
       - run: node cli.js http://leko.jp --depth 0
+      - run: node cli.js https://darkmodejs.learn.uno --depth 0 --prefers-color-schemes=light,dark
   node-lts:
     <<: *base
     steps:
@@ -43,6 +45,7 @@ jobs:
       - run: npm run prepare
       - run: node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
       - run: node cli.js http://leko.jp --depth 0
+      - run: node cli.js https://darkmodejs.learn.uno --depth 0 --prefers-color-schemes=light,dark
       - run: bash <(curl -s https://codecov.io/bash)
   node-v10:
     <<: *base
@@ -52,3 +55,7 @@ jobs:
     <<: *base
     docker:
       - image: circleci/node:12-stretch-browsers
+  node-v14:
+    <<: *base
+    docker:
+      - image: circleci/node:14-stretch-browsers
