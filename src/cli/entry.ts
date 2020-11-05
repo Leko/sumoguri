@@ -9,7 +9,7 @@ import { QueueItem } from '../QueueItem'
 import { TaggedWorkerPool } from '../TaggedWorkerPool'
 
 export async function main(options: CLIOptions) {
-  const log = init(options)
+  const log = init()
   log(options)
 
   const {

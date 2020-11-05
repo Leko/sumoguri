@@ -13,8 +13,6 @@ export type CLIOptions = {
   locales: string[]
   prefersColorSchemes: string[]
   disableCssAnimation: boolean
-  silent: boolean
-  verbose: boolean
 }
 
 const cmd = Yargs.options({
@@ -77,8 +75,6 @@ const cmd = Yargs.options({
     type: 'boolean',
     default: true,
   },
-  silent: { default: false },
-  verbose: { default: false },
 })
 
 export const parse = cmd.parse.bind(cmd)
