@@ -1,1 +1,1 @@
-export type Viewport = [number, number];
+export type Viewport = [number, number]
