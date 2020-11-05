@@ -11,9 +11,6 @@
     "cli.js",
     "dist"
   ],
-  "engines": {
-    "node": "10"
-  },
   "repository": "Leko/sumoguri",
   "author": "Leko <leko.noor@gmail.com>",
   "license": "MIT",
@@ -22,14 +19,14 @@
     "chalk": "^2.4.2",
     "core-js": "^3.1.4",
     "debug": "^4.1.1",
-    "puppeteer": "^1.19.0",
+    "puppeteer": "^5.4.1",
     "yargs": "^13.3.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.4",
     "@types/jest": "^24.0.17",
     "@types/node": "^12.6.9",
-    "@types/puppeteer": "^1.19.0",
+    "@types/puppeteer": "^5.4.0",
     "@types/yargs": "^13.0.2",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",

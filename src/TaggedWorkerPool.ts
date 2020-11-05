@@ -8,12 +8,14 @@ export class TaggedWorkerPool {
 
   static getTag({
     locale,
+    prefersColorScheme,
     viewport
   }: {
     locale: string;
+    prefersColorScheme: string;
     viewport: Viewport;
   }): string {
-    return [locale, viewport.join("x")].join("_");
+    return [locale, viewport.join("x"), prefersColorScheme].join("_");
   }
 
   constructor() {
@@ -24,17 +26,19 @@ export class TaggedWorkerPool {
 
   async run({
     locale,
+    prefersColorScheme,
     viewport,
     url
   }: {
     locale: string;
+    prefersColorScheme: string;
     viewport: Viewport;
     url: URL;
   }): Promise<Result> {
-    const tag = TaggedWorkerPool.getTag({ locale, viewport });
+    const tag = TaggedWorkerPool.getTag({ locale, viewport, prefersColorScheme });
     return this.limiter.key(tag).schedule(
       async (): Promise<Result> => {
-        const worker = await this.getOrInit({ locale, viewport });
+        const worker = await this.getOrInit({ locale, viewport, prefersColorScheme });
         return await worker.run(url);
       }
     );
@@ -48,15 +52,17 @@ export class TaggedWorkerPool {
 
   private async getOrInit({
     locale,
+    prefersColorScheme,
     viewport
   }: {
     locale: string;
+    prefersColorScheme: string;
     viewport: Viewport;
   }): Promise<Worker> {
-    const tag = TaggedWorkerPool.getTag({ locale, viewport });
+    const tag = TaggedWorkerPool.getTag({ locale, viewport, prefersColorScheme });
     const worker = this.states.get(tag);
     if (!worker) {
-      this.states.set(tag, new Worker({ locale, viewport }));
+      this.states.set(tag, new Worker({ locale, viewport, prefersColorScheme }));
     }
     return this.states.get(tag)!;
   }
