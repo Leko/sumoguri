@@ -40,8 +40,9 @@ jobs:
             - node_modules
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ checksum "package-lock.json" }}
       - run: npm test
-      - run: npm run prepare && node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
-      - run: npm run prepare && node cli.js http://leko.jp --depth 0
+      - run: npm run prepare
+      - run: node cli.js http://example.com --locales en-US,ja-JP --viewports 1680x1050,828x1792
+      - run: node cli.js http://leko.jp --depth 0
       - run: bash <(curl -s https://codecov.io/bash)
   node-v10:
     <<: *base
